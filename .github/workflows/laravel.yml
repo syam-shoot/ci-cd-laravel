@@ -1,0 +1,33 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+
+    - name: Install dependencies
+      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+    - name: Run tests
+      run: vendor/bin/phpunit
+
+    - name: Deploy to production
+      if: github.ref == 'refs/heads/main'
+      uses: my-repo/deploy-to-production@v1
+      with:
+        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        server_ip: 1.2.3.4
+        deploy_directory: /var/www/my-app
