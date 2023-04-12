@@ -11,6 +11,12 @@ jobs: # pekerjaan yang akan dijalankan
     runs-on: ubuntu-latest # berjalan di os ubuntu
     steps: # langkah-langkah yg dijalankan
     - uses: actions/checkout@v3 # mengecekout dari github actions
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+    - name: Install Node Dependencies
+      run: npm install
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');" # mengecek apakah file .env sudah ada atau belum, jika belum maka akan menyalin file .env.example ke .env
     - name: Install Dependencies
