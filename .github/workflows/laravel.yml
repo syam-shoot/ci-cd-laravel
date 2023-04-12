@@ -1,0 +1,32 @@
+name: Laravel-github-action #nama pipeline bisa sesuai keinginan
+
+on:
+  push:
+    branches: [ "main" ] # maksud dari ketiga kode diatas adalah dijalankan ketika ada push ke branch master
+  pull_request:
+    branches: [ "main" ]
+
+jobs: # pekerjaan yang akan dijalankan
+  laravel-tests: # nama pekerjaan
+    runs-on: ubuntu-latest # berjalan di os ubuntu
+    steps: # langkah-langkah yg dijalankan
+    - uses: actions/checkout@v3 # mengecekout dari github actions
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');" # mengecek apakah file .env sudah ada atau belum, jika belum maka akan menyalin file .env.example ke .env
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist # install dependensi di laravel yg diperlukan
+    - name: Generate key
+      run: php artisan key:generate # generate key laravel
+    - name: Directory Permissions
+      run: chmod -R 777 storage bootstrap/cache # mengubah permission untuk storage, bootstrap/cache
+    - name: Create Database # membuat database untuk keperluan testing
+      run: |
+        mkdir -p database
+        touch database/database.sqlite
+    - name: Execute tests (Unit and Feature tests) via PHPUnit
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+      run: vendor/bin/phpunit --testdox # menjalankan phpunit dengan testdox
+   # materi ci sampai disini
+  
