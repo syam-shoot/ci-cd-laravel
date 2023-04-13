@@ -43,5 +43,4 @@ jobs: # pekerjaan yang akan dijalankan
       with:
        context: .
        push: true
-       tags: ${{ secrets.DOCKER_USERNAME }}/laravel-cicd:${{ github.sha }}
-
+       tags: vioifc/laravel-cicd:latest
