@@ -28,8 +28,8 @@ RUN apt-get update \
 COPY --from=composer:2.1.3 /usr/bin/composer /usr/bin/composer
 
 # Create system user to run Composer and Artisan Commands
-ARG user
-ARG uid
+ARG sammy
+ARG 1001
 RUN useradd -G www-data,root -u $uid -d /home/$user $user \
     && mkdir -p /home/$user/.composer \
     && chown -R $user:$user /home/$user
